@@ -68,6 +68,7 @@ module.exports = [
         id: 'executor-email',
         type: 'executor',
         worker: 'email',
+        next: 'end'
       },
       {
         id: 'end',

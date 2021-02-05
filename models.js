@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const createModels = (dbConn) => {
   const StepTaskSchema = new mongoose.Schema({
+    taskId: String,
     stepId: String,
     flowId: String,
     input: String,
@@ -10,7 +11,10 @@ const createModels = (dbConn) => {
     executionTime: String,
     initTime: String,
     finishTime: String,
-    type: String,
+    type: {
+      type: String,
+      required: true,
+    },
     worker: String,
     next: String,
   });
