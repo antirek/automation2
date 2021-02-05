@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/antirek/automation2#readme",
   "dependencies": {
+    "bullmq": "^1.14.2",
     "config": "^3.3.3",
-    "mongoose": "^5.11.15"
+    "mongoose": "^5.11.15",
+    "nanoid": "^3.1.20"
   }
 }

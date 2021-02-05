@@ -1,4 +1,8 @@
 
+import { Queue } from 'bullmq';
+
+const executorQueue = new Queue('executor');
+const readyQueue = new Queue('ready');
 
 const mongoose = require('mongoose');
 const config = require('config');
@@ -71,8 +75,13 @@ async function start () {
       case 'executor': {
         console.log('executor');
         console.log('worker', stepTask.worker, stepTask.input);
-        const result = executor();
 
+        // можно раскидать по типам executor'ов
+        // const result = executor();
+        executorQueue.add('executor', stepTask.toObject());
+
+
+        /*
         if(stepTask.next) {
           //do next step task
           const nextStepDefinition = getStepById(flow, stepTask.next);
@@ -97,6 +106,7 @@ async function start () {
 
         await stepTask.save();
         console.log('executor ready');
+        */
         break;
       }
 
@@ -106,9 +116,12 @@ async function start () {
 
         const selectorResult = selector(stepTask.input);
 
+        readyQueue.add('ready', {steptask: stepTask.toObject(), result: selectorResult});
+
+        /*
         if (selectorResult.next) {
           const nextStepDefinition = getStepById(flow, selectorResult.next);
-          console.log('nextstep def', nextStepDefinition)
+          console.log('nextstep def', nextStepDefinition);
 
           const nextSteptask = new StepTask({
             stepId: stepTask.next,
@@ -128,6 +141,9 @@ async function start () {
         stepTask.finishTime = (new Date()).toString(),
 
         await stepTask.save();
+        */
+
+        
         console.log('selector ready');
         break;
       }

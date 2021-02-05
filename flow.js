@@ -68,7 +68,13 @@ module.exports = [
         id: 'executor-email',
         type: 'executor',
         worker: 'email',
-        next: 'end'
+      },
+      {
+        id: 'delay',
+        type: 'delay',
+        params: {
+          until: '2021-01-01',
+        }
       },
       {
         id: 'end',
