@@ -37,114 +37,116 @@ async function start () {
     console.log('no init steptasks');
     return;
   }
-  const flow = getFlowDefinition(stepTask.flowId);  
 
-  switch (stepTask.type) {
-    case 'start': {
-      console.log('start');
+  async function passStepTaskToWorker (stepTask) {
+    const flow = getFlowDefinition(stepTask.flowId);
 
-      const nextStepDefinition = getStepById(flow, stepTask.next);
-      console.log('nextstep def', nextStepDefinition)
+    switch (stepTask.type) {
+      case 'start': {
+        console.log('start');
 
-      const nextSteptask = new StepTask({
-        stepId: stepTask.next,
-        type: nextStepDefinition.type,
-        worker: nextStepDefinition.worker,
-        flowId: flow.id,
-        input: stepTask.input,
-        initTime: (new Date()).toString(),
-        executionTime: '',
-        state: 'init',
-        next: nextStepDefinition.next,
-      });
-
-      await nextSteptask.save();
-
-      stepTask.state = 'end';
-      stepTask.finishTime = (new Date()).toString(),
-      await stepTask.save();
-      console.log('start ready');
-      break;
-    }
-
-    case 'executor': {
-      console.log('executor');
-      console.log('worker', stepTask.worker, stepTask.input);
-
-      
-      const result = executor();
-
-
-      if(stepTask.next) {
-        //do next step task
         const nextStepDefinition = getStepById(flow, stepTask.next);
         console.log('nextstep def', nextStepDefinition)
+
+        const nextSteptask = new StepTask({
+          stepId: stepTask.next,
+          type: nextStepDefinition.type,
+          worker: nextStepDefinition.worker,
+          flowId: flow.id,
+          input: stepTask.input,
+          initTime: (new Date()).toString(),
+          state: 'init',
+          next: nextStepDefinition.next,
+        });
+
+        await nextSteptask.save();
+
+        stepTask.state = 'end';
+        stepTask.finishTime = (new Date()).toString(),
+        await stepTask.save();
+        console.log('start ready');
+        break;
+      }
+
+      case 'executor': {
+        console.log('executor');
+        console.log('worker', stepTask.worker, stepTask.input);
+        const result = executor();
+
+        if(stepTask.next) {
+          //do next step task
+          const nextStepDefinition = getStepById(flow, stepTask.next);
+          console.log('nextstep def', nextStepDefinition)
+          
+          console.log('step task', stepTask);
+          const nextSteptask = new StepTask({
+            stepId: stepTask.next,
+            type: nextStepDefinition.type,
+            flowId: flow.id,
+            input: JSON.stringify(result),
+            initTime: (new Date()).toString(),
+            state: 'init',
+          });
+
+          await nextSteptask.save();
+        }
         
-        console.log('step task', stepTask);
-        const nextSteptask = new StepTask({
-          stepId: stepTask.next,
-          type: nextStepDefinition.type,
-          flowId: flow.id,
-          input: JSON.stringify(result),
-          initTime: (new Date()).toString(),
-          executionTime: '',
-          state: 'init',
-        });
+        stepTask.state = 'end';
+        stepTask.output = JSON.stringify(result);
+        stepTask.finishTime = (new Date()).toString(),
 
-        await nextSteptask.save();
-      }
-      
-      stepTask.state = 'end';
-      stepTask.output = JSON.stringify(result);
-      stepTask.finishTime = (new Date()).toString(),
-
-      await stepTask.save();
-      console.log('executor ready');
-      break;
-    }
-
-    case 'selector': {
-      console.log('executor');
-      console.log('worker', stepTask.worker, stepTask.input);
-
-      const selectorResult = selector(stepTask.input);
-
-      if (selectorResult.next) {
-        const nextStepDefinition = getStepById(flow, selectorResult.next);
-        console.log('nextstep def', nextStepDefinition)
-
-        const nextSteptask = new StepTask({
-          stepId: stepTask.next,
-          type: nextStepDefinition.type,
-          flowId: flow.id,
-          input: JSON.stringify(selectorResult),
-          initTime: (new Date()).toString(),
-          executionTime: '',
-          state: 'init',
-        });
-
-        await nextSteptask.save();
+        await stepTask.save();
+        console.log('executor ready');
+        break;
       }
 
-      stepTask.state = 'end';
-      stepTask.output = JSON.stringify(selectorResult);
-      stepTask.finishTime = (new Date()).toString(),
+      case 'selector': {
+        console.log('executor');
+        console.log('worker', stepTask.worker, stepTask.input);
 
-      await stepTask.save();
-      console.log('selector ready');
-      break;
+        const selectorResult = selector(stepTask.input);
 
+        if (selectorResult.next) {
+          const nextStepDefinition = getStepById(flow, selectorResult.next);
+          console.log('nextstep def', nextStepDefinition)
 
+          const nextSteptask = new StepTask({
+            stepId: stepTask.next,
+            type: nextStepDefinition.type,
+            flowId: flow.id,
+            input: JSON.stringify(selectorResult),
+            initTime: (new Date()).toString(),
+            executionTime: '',
+            state: 'init',
+          });
 
-    }
+          await nextSteptask.save();
+        }
 
-    default: {
-      console.log('default') 
+        stepTask.state = 'end';
+        stepTask.output = JSON.stringify(selectorResult);
+        stepTask.finishTime = (new Date()).toString(),
+
+        await stepTask.save();
+        console.log('selector ready');
+        break;
+      }
+
+      case 'delay': {
+        console.log('delay');
+      }
+
+      default: {
+        console.log('default') 
+      }
     }
   }
+
+  await passStepTaskToWorker(stepTask);
 }
 
 
 (async function (){
-  await start();
+  setInterval(start, 1000);
+  //await start();
 })();
