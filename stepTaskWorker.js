@@ -1,5 +1,5 @@
 
-const { Queue } = require('bullmq');
+const { Queue, QueueScheduler } = require('bullmq');
 
 const executorQueue = new Queue('executor');
 const readyQueue = new Queue('ready');
@@ -30,8 +30,6 @@ const getStepById = (flowDefinition, stepId) => {
   return flowDefinition.steps.find(step => step.id === stepId);
 }
 
-
-const executor = () => {return {data:1}};
 const selector = (data) => {return {next: 'executor-email'}};
 
 async function start () {
@@ -78,7 +76,7 @@ async function start () {
 
         // можно раскидать по типам executor'ов
         // const result = executor();
-        executorQueue.add('executor', stepTask.toObject());
+        await executorQueue.add('executor', stepTask.toObject());
 
 
         /*
@@ -118,7 +116,7 @@ async function start () {
 
         const selectorResult = selector(stepTask.input);
 
-        readyQueue.add('ready', {steptask: stepTask.toObject(), result: selectorResult});
+        await readyQueue.add('ready', {steptask: stepTask.toObject(), result: selectorResult});
 
         /*
         if (selectorResult.next) {
@@ -152,10 +150,25 @@ async function start () {
 
       case 'delay': {
         console.log('delay');
+
+        const delayQueueScheduler = new QueueScheduler('delay');
+        const delayQueue = new Queue('delay');
+
+        await delayQueue.add('delay', stepTask.toObject(), { delay: 5000 });
+
+        stepTask.state = 'work';
+        
+        // stepTask.output = JSON.stringify(result);
+        // stepTask.finishTime = (new Date()).toString(),
+
+        await stepTask.save();
+        console.log('delay task created');
+
+        break;
       }
 
       default: {
-        console.log('default') 
+        console.log('default');
       }
     }
   }
