@@ -1,5 +1,5 @@
 
-import { Queue } from 'bullmq';
+const { Queue } = require('bullmq');
 
 const executorQueue = new Queue('executor');
 const readyQueue = new Queue('ready');
@@ -65,7 +65,7 @@ async function start () {
 
         await nextSteptask.save();
 
-        stepTask.state = 'end';
+        stepTask.state = 'ready';
         stepTask.finishTime = (new Date()).toString(),
         await stepTask.save();
         console.log('start ready');
@@ -100,18 +100,20 @@ async function start () {
           await nextSteptask.save();
         }
         
-        stepTask.state = 'end';
-        stepTask.output = JSON.stringify(result);
-        stepTask.finishTime = (new Date()).toString(),
+        */
+        stepTask.state = 'work';
+        
+        // stepTask.output = JSON.stringify(result);
+        // stepTask.finishTime = (new Date()).toString(),
 
         await stepTask.save();
-        console.log('executor ready');
-        */
+        console.log('executor task created');
+        
         break;
       }
 
       case 'selector': {
-        console.log('executor');
+        console.log('selector');
         console.log('worker', stepTask.worker, stepTask.input);
 
         const selectorResult = selector(stepTask.input);
@@ -143,7 +145,7 @@ async function start () {
         await stepTask.save();
         */
 
-        
+
         console.log('selector ready');
         break;
       }

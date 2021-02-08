@@ -1,8 +1,23 @@
 const mongoose = require('mongoose');
+const {nanoid} = require('nanoid');
 
 const createModels = (dbConn) => {
+  const FlowSchema = new mongoose.Schema({
+    flowId: String,
+    steps: [],
+  });
+
+  const TaskSchema = new mongoose.Schema({
+    taskId: String,
+    flow: String,
+  });
+
   const StepTaskSchema = new mongoose.Schema({
-    stepTaskId: String,
+    stepTaskId: {
+      type: String,
+      default: () => nanoid(),
+      required: true,
+    },
     taskId: String,
     stepId: String,
     flowId: String,
@@ -20,9 +35,13 @@ const createModels = (dbConn) => {
   });
 
   const StepTask = dbConn.model('StepTask', StepTaskSchema);
+  const Task = dbConn.model('Task', TaskSchema);
+  const Flow = dbConn.model('Flow', FlowSchema);
 
   return {
     StepTask,
+    Task,
+    Flow,
   };
 };
 
