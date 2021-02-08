@@ -8,8 +8,12 @@ const createModels = (dbConn) => {
   });
 
   const TaskSchema = new mongoose.Schema({
-    taskId: String,
-    flow: String,
+    taskId: {
+      type: String,
+      default: () => nanoid(),
+      required: true,
+    },
+    flowDefinition: String,
   });
 
   const StepTaskSchema = new mongoose.Schema({

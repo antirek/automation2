@@ -7,7 +7,7 @@ const readyQueue = new Queue('ready');
 const mongoose = require('mongoose');
 const config = require('config');
 
-const flows = require('./flow');
+const flows = require('./flowDefinitions');
 const {createModels} = require('./models');
 
 const dbConn = mongoose.createConnection(config.mongodb, {
@@ -77,28 +77,6 @@ async function start () {
         // можно раскидать по типам executor'ов
         // const result = executor();
         await executorQueue.add('executor', stepTask.toObject());
-
-
-        /*
-        if(stepTask.next) {
-          //do next step task
-          const nextStepDefinition = getStepById(flow, stepTask.next);
-          console.log('nextstep def', nextStepDefinition)
-          
-          console.log('step task', stepTask);
-          const nextSteptask = new StepTask({
-            stepId: stepTask.next,
-            type: nextStepDefinition.type,
-            flowId: flow.id,
-            input: JSON.stringify(result),
-            initTime: (new Date()).toString(),
-            state: 'init',
-          });
-
-          await nextSteptask.save();
-        }
-        
-        */
         stepTask.state = 'work';
         
         // stepTask.output = JSON.stringify(result);
@@ -117,32 +95,6 @@ async function start () {
         const selectorResult = selector(stepTask.input);
 
         await readyQueue.add('ready', {steptask: stepTask.toObject(), result: selectorResult});
-
-        /*
-        if (selectorResult.next) {
-          const nextStepDefinition = getStepById(flow, selectorResult.next);
-          console.log('nextstep def', nextStepDefinition);
-
-          const nextSteptask = new StepTask({
-            stepId: stepTask.next,
-            type: nextStepDefinition.type,
-            flowId: flow.id,
-            input: JSON.stringify(selectorResult),
-            initTime: (new Date()).toString(),
-            executionTime: '',
-            state: 'init',
-          });
-
-          await nextSteptask.save();
-        }
-
-        stepTask.state = 'end';
-        stepTask.output = JSON.stringify(selectorResult);
-        stepTask.finishTime = (new Date()).toString(),
-
-        await stepTask.save();
-        */
-
 
         console.log('selector ready');
         break;

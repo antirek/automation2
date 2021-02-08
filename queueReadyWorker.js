@@ -3,7 +3,7 @@ const {Worker, Queue} = require('bullmq');
 const {createModels} = require('./models');
 const config = require('config');
 
-const flows = require('./flow');
+const flows = require('./flowDefinitions');
 
 const getFlowDefinition = (id) => {
   return flows.find(flow => flow.id === id);

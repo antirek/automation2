@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const config = require('config');
 
-
-const flows = require('./flow');
-const {createModels} = require('./models');
+const flowDefinitions = require('./flowDefinitions');
+const {Flow} = require('flow');
+const { createModels } = require('./models');
+const { Queue } = require('bullmq');
 
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,
@@ -12,42 +13,34 @@ const dbConn = mongoose.createConnection(config.mongodb, {
   useFindAndModify: false,
 });
 
-const {StepTask} = createModels(dbConn);
-
+const {StepTask, Task} = createModels(dbConn);
 
 const getFlowDefinition = (id) => {
-  return flows.find(flow => flow.id === id);
+  return flowDefinitions.find(flow => flow.id === id);
 }
 
-const getFirstStep = (flowDefinition) => {
-  const steps = flowDefinition.steps;
-  if (!steps && !steps[0]) {
-    return;
-  }
-  return steps[0];
-}
+const initQueue = new Queue('init');
 
-function start () {
-  const inputData = {var1: '1'};
+function startTask (flowId, inputData) {
+  const flowDefinition = getFlowDefinition(flowId);
+  const flow = new Flow(flowDefinition);
 
-  const flow = getFlowDefinition('test');
-  console.log('flow test', flow, inputData);
+  const task = new Task({flowDefinition});
+  await task.save();
 
-  const firstStep = getFirstStep(flow);
+  const firstStep = flow.getFirstStep();
   console.log('first step', firstStep);
 
   const stepTask = new StepTask({
-    stepId: 'start',
-    type: 'start',
-    flowId: flow.id,
+    step: firstStep,
     input: JSON.stringify(inputData),
-    initTime: (new Date()).toString(),
-    executionTime: '',
     state: 'init',
-    next: firstStep.next,
   });
 
-  stepTask.save();
+  initQueue.add('init', stepTask.toObject());
 }
 
-start();
+const inputData = {var1: '1'};
+const flowId = 'test';
+
+startTask(flowId, inputData);
