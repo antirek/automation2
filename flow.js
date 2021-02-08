@@ -53,8 +53,9 @@ module.exports = [
         type: 'delay',
         params: {
           until: '2021-01-01',
-        }
+        },
+        next: 'selector-one',
       },
     ],
   },
-]
+];
