@@ -1,10 +1,12 @@
+const flowDefinitions = require("./flowDefinitions");
+
 class Flow {
   flowId;
   steps;
 
   constructor(flowDefinition) {
-    this.id = flowDefinition.flowId;
-    this.steps = flowDefinition.step;
+    this.flowId = flowDefinition.id;
+    this.steps = flowDefinition.steps;
   }
 
   getStepById(stepId) {
@@ -25,4 +27,40 @@ class Flow {
   }
 }
 
-module.exports = {Flow};
+/*
+class StepTask {
+  flowDefinition;
+  stepTaskId;
+  taskId;
+  input;
+  result;
+  step;
+  _next;
+
+  constructor({flowDefinition, taskId, step, input}) {
+    this.flowDefinition = flowDefinition;
+    this.taskId = taskId;
+    this.step = step;
+    this.input = input;
+  }
+
+  setNext(next) {
+    if (this.step.type === 'selector') {
+      this._next = next;
+    } else {
+      throw Error('cant change next');
+    }
+  }
+
+  getNext() {
+    if (this.step.type === 'selector') {
+      return this._next;
+    } else {
+      return this.step.next;
+    }
+  }
+}
+
+*/
+
+module.exports = { Flow };
