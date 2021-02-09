@@ -32,7 +32,7 @@ async function passStepTaskToWorker (stepTask) {
       const delayQueue = new Queue('delay');
 
       await delayQueue.add('delay', stepTask, { 
-        delay: stepTask.step.params?.delay, 
+        delay: 5000,
         removeOnComplete: true,
       });
       break;
@@ -47,8 +47,12 @@ async function passStepTaskToWorker (stepTask) {
 }
 
 const worker = new Worker('init', async job => {
-  console.log('task', job.data);
-  const stepTask = job.data;
+  try {
+    console.log('task', job.data);
+    const stepTask = job.data;
 
-  passStepTaskToWorker(stepTask);
+    passStepTaskToWorker(stepTask);
+  } catch (e) {
+    console.log(e);
+  }
 });

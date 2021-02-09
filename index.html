@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/quasar@1.15.1/dist/quasar.css" rel="stylesheet" type="text/css">    
+  </head>
+  <body>
+    <div id="app">
+
+      <div class="row">
+
+        <div class="col-12 col-md-3 q-pa-md">
+          <q-list bordered separator v-for="(task,index) in tasks" v-if="tasks" :key="index">
+            <q-item clickable>
+              <q-item-section @click="loadStepTaskLog(task.taskId)">
+                <q-item-label>{{ task.taskId }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+
+        </div>
+
+        <div class="col-12 col-md-9 q-pa-md">
+          <q-table
+            title="Logs"
+            :data="data"
+            :columns="columns"
+            :pagination.sync="pagination"
+          />
+        </div>
+        
+      </div>
+      
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@1.15.0/dist/quasar.umd.min.js"></script>
+    <script>
+
+      var app = new Vue({
+        el: '#app',
+        
+        data: function () {
+          return {
+            tasks: null,
+            data: [],
+            pagination: {
+              page: 1,    
+              rowsPerPage: 0 // 0 means all rows    
+            },
+            columns: [
+              {
+                label: 'time',
+                field: 'time',
+              },
+              {
+                label: 'stepTaskId',
+                field: 'stepTaskId',
+              },
+              {
+                label: 'stepId',
+                field: 'stepId',
+              },
+              {
+                label: 'worker',
+                field: 'worker',
+              },
+              {
+                label: 'state',
+                field: 'state',
+              },
+            ]
+          }
+        },
+        methods: {
+          async loadTasks() {
+            this.tasks = (await axios.get('http://localhost:3000/tasks')).data;
+          },
+          async loadStepTaskLog(taskId) {
+            this.data = (await axios.get(`http://localhost:3000/steptaskLog/${taskId}`)).data;
+          },
+        },
+        mounted () {
+          this.loadTasks();
+        },
+      });
+
+    </script>
+  </body>
+</html>

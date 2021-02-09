@@ -20,10 +20,22 @@ const createModels = (dbConn) => {
   const Flow = dbConn.model('Flow', FlowSchema);
 
   const StepTaskLogSchema = new mongoose.Schema({
-    taskId: String,
-    stepTaskId: String,
-    stepId: String,
-    flowId: String,
+    taskId: {
+      type: String,
+      required: true,
+    },
+    stepTaskId: {
+      type: String,
+      required: true,
+    },
+    stepId: {
+      type: String,
+      required: true,
+    },
+    flowId: {
+      type: String,
+      required: true,
+    },
     worker: String,
     time: String,
     state: String,
