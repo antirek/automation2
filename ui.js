@@ -7,16 +7,12 @@ const IOredis = require('ioredis');
 // const connection = new IOredis(config.get('redis'));
 
 const app = express();
+const queues = [
+  'init', 'executor', 'selector', 'delay', 'ready',
+];
 
-const webhookQueue = new Queue('ready');
-const instanceQueue = new Queue('delay');
-const executorQueue = new Queue('executor');
-
-setQueues([
-  new BullMQAdapter(webhookQueue),
-  new BullMQAdapter(instanceQueue),
-  new BullMQAdapter(executorQueue),
-]);
+const bullQueues = queues.map(q => {return new Queue(q)});
+setQueues(bullQueues.map(bq => {return new BullMQAdapter(bq)}));
 
 app.use('/ui', router)
 

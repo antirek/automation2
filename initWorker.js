@@ -1,15 +1,16 @@
 const {Worker, Queue, QueueScheduler, } = require('bullmq');
-// const flowDefinitions = require('./flowDefinitions');
+const {logSteptask} = require('./logsteptask');
 
 async function passStepTaskToWorker (stepTask) {
-  // const flow = getFlowDefinition(stepTask.step.flowId);
+  await logSteptask(stepTask, 'init', 'start');
+
   switch (stepTask.step.type) {
     case 'executor': {
       console.log('executor');
       console.log('worker', stepTask.step.worker, stepTask.input);
 
       const executorQueue = new Queue('executor');
-      await executorQueue.add('executor', stepTask);
+      await executorQueue.add('executor', stepTask, {removeOnComplete: true});
 
       break;
     }
@@ -18,9 +19,8 @@ async function passStepTaskToWorker (stepTask) {
       console.log('selector');
       console.log('worker', stepTask.step.worker, stepTask.input);
 
-      // const selectorResult = selector(stepTask.input);
       const selectorQueue = new Queue('selector');
-      await selectorQueue.add('selector', stepTask);
+      await selectorQueue.add('selector', stepTask, {removeOnComplete: true});
 
       break;
     }
@@ -31,19 +31,24 @@ async function passStepTaskToWorker (stepTask) {
       const delayQueueScheduler = new QueueScheduler('delay');
       const delayQueue = new Queue('delay');
 
-      await delayQueue.add('delay', stepTask, { delay: stepTask.step.params?.delay });
+      await delayQueue.add('delay', stepTask, { 
+        delay: stepTask.step.params?.delay, 
+        removeOnComplete: true,
+      });
       break;
     }
 
     default: {
       console.log('default');
-    }
+    }    
   }
+
+  await logSteptask(stepTask, 'init', 'end');
 }
 
 const worker = new Worker('init', async job => {
   console.log('task', job.data);
-  const task = job.data;
+  const stepTask = job.data;
 
-  passStepTaskToWorker(task);
+  passStepTaskToWorker(stepTask);
 });

@@ -4,7 +4,7 @@ const worker = new Worker('selector', async job => {
   console.log(job.data);
   const task = job.data;
 
-  const result = 'exec-httprequest';
+  const result = 'successmodificator-email1';
   task.result = result;
 
   console.log('result', result);

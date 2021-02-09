@@ -41,7 +41,7 @@ async function startTask (flowId, inputData) {
     stepperId: 0,
   };
 
-  initQueue.add('init', stepTask);
+  initQueue.add('init', stepTask, {removeOnComplete: true});
 }
 
 const inputData = {var1: '1'};
