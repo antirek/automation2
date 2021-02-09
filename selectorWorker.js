@@ -11,7 +11,7 @@ const worker = new Worker('selector', async job => {
 
   console.log('result', result);
   const readyQueue = new Queue('ready');
-  readyQueue.add('ready', stepTask);
+  readyQueue.add('ready', stepTask, {removeOnComplete: true, });
 
   await logSteptask(stepTask, 'selector', 'end', 'info', result);
 });

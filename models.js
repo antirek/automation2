@@ -36,9 +36,23 @@ const createModels = (dbConn) => {
       type: String,
       required: true,
     },
-    worker: String,
-    time: String,
-    state: String,
+    worker: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    level: {
+      type: String,
+      required: true,
+    },
+    data: mongoose.Schema.Types.Mixed,
   });
 
   const StepTaskLog = dbConn.model('StepTaskLog', StepTaskLogSchema);

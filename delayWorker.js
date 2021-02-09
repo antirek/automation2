@@ -9,5 +9,5 @@ const worker = new Worker('delay', async job => {
 
   console.log('result', result);
   const readyQueue = new Queue('ready');
-  readyQueue.add('ready', task);
+  readyQueue.add('ready', task, {removeOnComplete: true,});
 });
