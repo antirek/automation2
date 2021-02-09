@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('config');
+const dayjs = require('dayjs');
 
 const { createModels } = require('./models');
 
@@ -18,7 +19,7 @@ const logSteptask = async (stepTask, worker, state, level = 'info', data = '') =
     taskId: stepTask.taskId,
     stepTaskId: stepTask.stepTaskId,
     stepId: stepTask.step.id,
-    time: (new Date()).toString(),
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     flowId: stepTask.flowDefinition.id,
     state,
     worker,
