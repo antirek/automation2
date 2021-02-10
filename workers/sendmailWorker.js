@@ -1,5 +1,5 @@
-const {StepWorker} = require('./stepWorker');
-const {logSteptask} = require('./logsteptask');
+const {StepWorker} = require('./../lib/stepWorker');
+const {logSteptask} = require('./../lib/logsteptask');
 
 class SendmailWorker extends StepWorker {
   async process (job) {
@@ -16,6 +16,5 @@ class SendmailWorker extends StepWorker {
     await logSteptask(stepTask, this.workerName, 'end', 'info', result);
   }
 }
-
 
 module.exports = {SendmailWorker};

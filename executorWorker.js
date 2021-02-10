@@ -1,7 +1,7 @@
 const {Worker, Queue} = require('bullmq');
-const {StepWorker} = require('./stepWorker');
-const {SendmailWorker} = require('./sendmailWorker');
-const {DelayWorker} = require('./delayWorker');
+const {StepWorker} = require('./lib/stepWorker');
+const {SendmailWorker} = require('./workers/sendmailWorker');
+const {DelayWorker} = require('./workers/delayWorker');
 
 const stepWorker1 = new StepWorker({
   workerName: 'executor1',
@@ -43,15 +43,3 @@ stepProcessors.map(processor => {
     })
   })  
 })
-
-
-/*
-new Worker('httprequestExecutor', async (job) => {
-  await stepWorker1.process(job);
-});
-
-new Worker('delay', async (job) => {
-  await delayWorker1.process(job);
-});
-
-*/

@@ -1,6 +1,6 @@
 
-const {StepWorker} = require('./stepWorker');
-const {logSteptask} = require('./logsteptask');
+const {StepWorker} = require('./../lib/stepWorker');
+const {logSteptask} = require('./../lib/logsteptask');
 
 class DelayWorker extends StepWorker {
   async process (job) {

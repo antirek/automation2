@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-step-init-worker": "node lib/initWorker",
+    "start-step-ready-worker": "node lib/readyWorker",
+    "start-step-executor-worker": "node executorWorker",
+    "start-bull-ui": "node ui/bull-ui",
+    "start-log-ui": "node ui/log-api",
+    "start-trigger": "node index"
   },
   "repository": {
     "type": "git",

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const config = require('config');
-
-const flowDefinitions = require('./flowDefinitions');
-const { Flow } = require('./flow');
-const { createModels } = require('./models');
 const { Queue } = require('bullmq');
 const { nanoid } = require('nanoid');
+
+const flowDefinitions = require('./flowDefinitions');
+const { Flow } = require('./lib/flow');
+const { createModels } = require('./models/models');
 
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,

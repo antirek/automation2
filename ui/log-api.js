@@ -3,7 +3,7 @@ const config = require('config');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const { createModels } = require('./models');
+const { createModels } = require('./../models/models');
 const app = express();
 
 const dbConn = mongoose.createConnection(config.mongodb, {
