@@ -1,26 +1,20 @@
 const {Worker, Queue} = require('bullmq');
-const {logSteptask} = require('./logsteptask');
+const {StepWorker} = require('./stepWorker');
+const {SendmailWorker} = require('./sendmailWorker');
 
 
+const stepWorker1 = new StepWorker({
+  workerName: 'executor1',
+  readyQueueName: 'ready',
+  type: 'executor', 
+});
 
-class Executor {
-  async process (job) {
-    console.log(job.data);
-    const stepTask = job.data;
-  
-    await logSteptask(stepTask, 'executor', 'start');
-      
-    const result = stepTask.step.worker + ' - hello - worked';
-    stepTask.result = result;
-  
-    console.log('result', result);
-    const readyQueue = new Queue('ready');
-    readyQueue.add('executor', stepTask, {removeOnComplete: true, });
-  
-    await logSteptask(stepTask, 'executor', 'end', 'info', result);
-  }
-}
+const sendMailWorker1 = new SendmailWorker({
+  workerName: 'executor1',
+  readyQueueName: 'ready',
+  type: 'executor',  
+})
 
-const executor = new Executor();
-
-new Worker('executor', executor.process);
+new Worker('executor', async (job) => {
+  await sendMailWorker1.process(job);
+});

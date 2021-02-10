@@ -27,8 +27,10 @@ const logSteptask = async (stepTask, worker, state, level = 'info', data = '') =
     level,
     data,
   })
-
-  return await stepTaskLog.save();
+  console.log('steptasklog ready')
+  await stepTaskLog.save();
+  console.log('saved');
+  return;
 }
 
 module.exports = {logSteptask};
