@@ -44,9 +44,9 @@ async function startTask (flowId, inputData) {
   initQueue.add('init', stepTask, {removeOnComplete: true});
 }
 
-const inputData = {var1: '1'};
-const flowId = 'test';
+const inputData = {from: '2422', to: '2344', account: '2', };
+const flowId = 'test2';
 
-(async function (){
+(async function () {
   await startTask(flowId, inputData)
 })();

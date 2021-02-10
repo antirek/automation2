@@ -6,7 +6,11 @@ class DelayWorker extends StepWorker {
   async process (job) {
     console.log(job.data);
     const stepTask = job.data;
-    await logSteptask(stepTask, this.workerName, 'start');
+
+    const params = stepTask.step.params;    // хранятся во flowDefinition
+    const input = stepTask.input;           // от предыдущего шага
+
+    await logSteptask(stepTask, this.workerName, 'start', 'info', JSON.stringify({params, input}));
 
     const result = 'delay success';
     stepTask.result = result;
