@@ -24,10 +24,11 @@ module.exports = [
         type: 'selector',
         worker: 'successFailSelector',
         params: {
-          list: {
-            'success': 'successmodificator-email1',
-            'fail': 'failmodificator-email2',
-          },
+          
+        },
+        nextVariants: {
+          'success': 'successmodificator-email1',
+          'fail': 'failmodificator-email2',
         },
       },
       {
@@ -49,11 +50,12 @@ module.exports = [
       },
       {
         id: 'delay',
-        type: 'delay',
+        type: 'executor',
+        worker: 'delay',
         params: {
           until: '2021-01-01',
         },
-        next: 'selector-one',
+        // next: 'selector-one',
       },
     ],
   },

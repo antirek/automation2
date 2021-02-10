@@ -1,13 +1,22 @@
-const {Worker, Queue} = require('bullmq');
 
-const worker = new Worker('delay', async job => {
-  console.log(job.data);
-  const task = job.data;
+const {StepWorker} = require('./stepWorker');
+const {logSteptask} = require('./logsteptask');
 
-  const result = 'delay';
-  task.result = result;
+class DelayWorker extends StepWorker {
+  async process (job) {
+    console.log(job.data);
+    const stepTask = job.data;
+    await logSteptask(stepTask, this.workerName, 'start');
 
-  console.log('result', result);
-  const readyQueue = new Queue('ready');
-  readyQueue.add('ready', task, {removeOnComplete: true,});
-});
+    const result = 'delay success';
+    stepTask.result = result;
+    console.log('result', result);
+
+    this.readyQueue.add('executor', stepTask, {delay: 5000, removeOnComplete: true, });
+    console.log('result', result);
+    await logSteptask(stepTask, this.workerName, 'end', 'info', result);
+  }
+}
+
+
+module.exports = {DelayWorker};

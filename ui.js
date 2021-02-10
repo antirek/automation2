@@ -8,7 +8,10 @@ const IOredis = require('ioredis');
 
 const app = express();
 const queues = [
-  'init', 'executor', 'selector', 'delay', 'ready',
+  'init', 
+  'delay', 
+  'httprequestExecutor', 
+  'ready',
 ];
 
 const bullQueues = queues.map(q => {return new Queue(q)});
@@ -16,6 +19,6 @@ setQueues(bullQueues.map(bq => {return new BullMQAdapter(bq)}));
 
 app.use('/ui', router)
 
-app.listen(3000, () => {
+app.listen(3002, () => {
   console.log('started', config);
 });

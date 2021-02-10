@@ -1,8 +1,9 @@
-const {Worker, Queue} = require('bullmq');
+const {Worker, Queue, QueueScheduler} = require('bullmq');
 const {logSteptask} = require('./logsteptask');
 
 class StepWorker {
   constructor ({readyQueueName, type, workerName}) {
+    const myQueueScheduler = new QueueScheduler(readyQueueName);
     this.readyQueue = new Queue(readyQueueName);
     this.type = type;
     this.workerName = workerName;
