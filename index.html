@@ -84,10 +84,10 @@
         },
         methods: {
           async loadTasks() {
-            this.tasks = (await axios.get('http://localhost:3000/tasks')).data;
+            this.tasks = (await axios.get('http://localhost:3001/tasks')).data;
           },
           async loadStepTaskLog(taskId) {
-            this.data = (await axios.get(`http://localhost:3000/steptaskLog/${taskId}`)).data;
+            this.data = (await axios.get(`http://localhost:3001/steptaskLog/${taskId}`)).data;
           },
         },
         mounted () {
