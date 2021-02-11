@@ -5,6 +5,7 @@ const {
   SendmailWorker,
   DelayWorker,
   DetectWorktimeWorker,
+  SendMessageToCaller,
 } = require('./workers');
 
 const stepProcessors = [
@@ -36,6 +37,12 @@ const stepProcessors = [
     queue: 'detectWorktimeWorker',
     workers: [
       new DetectWorktimeWorker(),
+    ],
+  },
+  {
+    queue: 'sendMessageToCallerWorker',
+    workers: [
+      new SendMessageToCaller(),
     ],
   },
 ];

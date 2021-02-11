@@ -2,9 +2,9 @@
 const {StepWorker} = require('./../lib/stepWorker');
 
 class DelayWorker extends StepWorker {
-  async do (params, input) {
+  async do (stepTask) {
     const result = 'delay success';
-    return result;
+    return {result};
   }
 
   async passResultToReadyQueue (stepTask) {

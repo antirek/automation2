@@ -4,5 +4,6 @@ module.exports = {
   DelayWorker: require('./delayWorker').DelayWorker,
   ModifyCalldataWorker: require('./modifyCalldataWorker').ModifyCalldataWorker,
   DetectWorktimeWorker: require('./detectWorktimeWorker').DetectWorktimeWorker,
+  SendMessageToCaller: require('./sendMessageToCaller').SendMessageToCaller,
 }
 
