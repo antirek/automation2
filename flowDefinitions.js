@@ -11,7 +11,6 @@ module.exports = [
       },
       {
         id: 'modifyCalldata',
-        type: 'executor',
         worker: 'modifyCalldataWorker',
         params: {
           validate: true,
@@ -21,7 +20,6 @@ module.exports = [
       },
       {
         id: 'detectWorktime',
-        type: 'selector',
         worker: 'detectWorktimeWorker',
         params: {
           worktime: {
@@ -36,18 +34,15 @@ module.exports = [
       },
       {
         id: 'sendMessageToCaller',
-        type: 'executor',
         worker: 'sendMessageToCallerWorker',
         next: 'sendMessageToCallee',
       },
       {
         id: 'sendMessageToCallee',
-        type: 'executor',
         worker: 'sendMessageToCalleeWorker',
       },
       {
         id: 'delayToWorktime',
-        type: 'executor',
         worker: 'delayToWorktimeWorker',
         next: 'sendMessageToCaller',
       },
@@ -65,7 +60,6 @@ module.exports = [
       },
       {
         id: 'exec-httprequest',
-        type: 'executor',
         worker: 'httprequestExecutor',
         params: {
           validate: true,
@@ -75,7 +69,6 @@ module.exports = [
       },
       {
         id: 'selector-one',
-        type: 'selector',
         worker: 'successFailSelector',
         params: {
           
@@ -87,29 +80,24 @@ module.exports = [
       },
       {
         id: 'successmodificator-email1',
-        type: 'executor',
         worker: 'successhttprequest2emailModificator',
         next: 'executor-email',
       },
       {
         id: 'failmodificator-email2',
-        type: 'executor',
         worker: 'failhttprequest2email',
         next: 'executor-email',
       },
       {
         id: 'executor-email',
-        type: 'executor',
         worker: 'email',
       },
       {
         id: 'delay',
-        type: 'executor',
         worker: 'delay',
         params: {
           until: '2021-01-01',
         },
-        // next: 'selector-one',
       },
     ],
   },
