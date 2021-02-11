@@ -1,45 +1,49 @@
-const {Worker, Queue} = require('bullmq');
-const {StepWorker} = require('./lib/stepWorker');
-const {SendmailWorker} = require('./workers/sendmailWorker');
-const {DelayWorker} = require('./workers/delayWorker');
+const {Worker} = require('bullmq');
 
-const stepWorker1 = new StepWorker({
-  workerName: 'executor1',
-  readyQueueName: 'ready',
-  type: 'executor', 
-});
-
-const delayWorker1 = new DelayWorker({
-  workerName: 'delay1',
-  readyQueueName: 'ready',
-  type: 'executor', 
-});
-
-const sendMailWorker1 = new SendmailWorker({
-  workerName: 'executor1',
-  readyQueueName: 'ready',
-  type: 'executor',  
-});
+const {
+  ModifyCalldataWorker, 
+  SendmailWorker,
+  DelayWorker,
+  DetectWorktimeWorker,
+} = require('./workers');
 
 const stepProcessors = [
-  {
+  /*{
     queue: 'httprequestExecutor',
     workers: [
       stepWorker1,
-    ]
-  },
+    ],
+  },*/
   {
     queue: 'delay',
     workers: [
-      delayWorker1,
-    ]
-  }
-]
+      new DelayWorker(),
+    ],
+  },
+  {
+    queue: 'sendmail',
+    workers: [
+      new SendmailWorker(),
+    ],
+  },
+  {
+    queue: 'modifyCalldataWorker',
+    workers: [
+      new ModifyCalldataWorker(),
+    ],
+  },
+  {
+    queue: 'detectWorktimeWorker',
+    workers: [
+      new DetectWorktimeWorker(),
+    ],
+  },
+];
 
 stepProcessors.map(processor => {
   processor.workers.map(worker => {
     new Worker(processor.queue, async (job) => {
       await worker.process(job);
-    })
-  })  
-})
+    });
+  });
+});

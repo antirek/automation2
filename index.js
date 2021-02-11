@@ -45,7 +45,7 @@ async function startTask (flowId, inputData) {
 }
 
 const inputData = {from: '2422', to: '2344', account: '2', };
-const flowId = 'test';
+const flowId = 'test2';
 
 (async function () {
   await startTask(flowId, inputData)
