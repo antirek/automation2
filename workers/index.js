@@ -6,5 +6,6 @@ module.exports = {
   DetectWorktimeWorker: require('./detectWorktimeWorker').DetectWorktimeWorker,
   SendMessageToCaller: require('./sendMessageToCaller').SendMessageToCaller,
   SendMessageToCallee: require('./sendMessageToCallee').SendMessageToCallee,
+  PrepareMessagesWorker: require('./prepareMessages').PrepareMessagesWorker,
 }
 

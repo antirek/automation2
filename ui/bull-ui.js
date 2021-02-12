@@ -8,10 +8,15 @@ const IOredis = require('ioredis');
 
 const app = express();
 const queues = [
-  'init', 
-  'delay', 
+  'init',
+  'delay',
   'httprequestExecutor', 
   'ready',
+  'modifyCalldataWorker',
+  'detectWorktimeWorker',
+  'sendMessageToCallerWorker',
+  'sendMessageToCalleeWorker',
+  'prepareMessages',
 ];
 
 const bullQueues = queues.map(q => {return new Queue(q)});

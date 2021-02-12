@@ -1,15 +1,22 @@
 const {StepWorker} = require('./../lib/stepWorker');
 
 class ModifyCalldataWorker extends StepWorker {
-  async do (stepTask) {
-    const calldata = stepTask.input;
+  async do (stepTask, storeData) {
+    const calldata = storeData.calldata;
+    
 
-    const result = 'modified calldata';
+    this.store.setData('10', '11', {eerer:12});
     console.log('stepId', stepTask.taskId);
 
-    await this.store.setData(stepTask.taskId, 'to', {data: '110@mobilon.ru'});
-    await this.store.setData(stepTask.taskId, 'from', {data: '1212@mobilon.ru'});
-    return {result};
+    return {
+      result: {
+        simpleData: {
+          to: '1212',
+          from: '122111',
+          time: '12111212',
+        }
+      }
+    };
   }
 }
 

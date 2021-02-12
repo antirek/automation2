@@ -23,6 +23,7 @@ const createModels = (dbConn) => {
     taskId: {
       type: String,
       required: true,
+      index: true,
     },
     stepTaskId: {
       type: String,

@@ -8,13 +8,38 @@ module.exports = [
       {
         type: 'start',
         next: 'modifyCalldata',
+        vars: {
+          out: ['calldata'],            // для проверки использования входящих и исходящих параметров на steps
+        },
       },
       {
         id: 'modifyCalldata',
         worker: 'modifyCalldataWorker',
+        vars: {
+          in: ['calldata'],
+          out: ['simpleData'],
+        },
         params: {
           validate: true,
           connectionId: 'crm',
+        },
+        next: 'prepareMessages',
+      },
+      {
+        id: 'prepareMessages',
+        worker: 'prepareMessages',
+        vars: {
+          in: ['simpleData'],
+          out: [
+            'callerNumber',
+            'calleeNumber',
+            'callerMessage',
+            'calleeMessage',
+          ],
+        },
+        params: {
+          callerMessageTemplate: '',
+          calleeMessageTemplate: '',
         },
         next: 'detectWorktime',
       },
@@ -36,10 +61,22 @@ module.exports = [
         id: 'sendMessageToCaller',
         worker: 'sendMessageToCallerWorker',
         next: 'sendMessageToCallee',
+        vars: {
+          in: [
+            'callerNumber',
+            'callerMessage',
+          ],
+        },
       },
       {
         id: 'sendMessageToCallee',
         worker: 'sendMessageToCalleeWorker',
+        vars: {
+          in: [
+            'calleeNumber',
+            'calleeMessage',
+          ],
+        },
       },
       {
         id: 'delayToWorktime',

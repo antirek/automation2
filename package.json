@@ -29,6 +29,9 @@
     "dayjs": "^1.10.4",
     "express": "^4.17.1",
     "mongoose": "^5.11.15",
-    "nanoid": "^3.1.20"
+    "nanoid": "^3.1.20",
+    "node-serialize": "^0.0.4",
+    "redis": "^3.0.2",
+    "serialize-javascript": "^5.0.1"
   }
 }

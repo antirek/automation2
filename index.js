@@ -2,10 +2,15 @@ const mongoose = require('mongoose');
 const config = require('config');
 const { Queue } = require('bullmq');
 const { nanoid } = require('nanoid');
+const Redis = require('ioredis');
 
+const {Store} = require('./store');
 const flowDefinitions = require('./flowDefinitions');
 const { Flow } = require('./lib/flow');
 const { createModels } = require('./models/models');
+
+const client = new Redis();
+const store = new Store({client});
 
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,
@@ -29,6 +34,11 @@ async function startTask (flowId, inputData) {
   const task = new Task({flowDefinition: JSON.stringify(flowDefinition)});
   await task.save();
 
+  const varsOut = flow.getStartStepVarsOut();
+  for (const varOut of varsOut) {
+    await store.setData(task.taskId, varOut, inputData[varOut]);
+  }
+
   const firstStep = flow.getFirstStep();
   console.log('first step', firstStep);
 
@@ -36,7 +46,7 @@ async function startTask (flowId, inputData) {
     stepTaskId: nanoid(),
     step: firstStep,
     taskId: task.taskId,
-    input: inputData,
+    // input: inputData,
     flowDefinition,
     stepperId: 0,
   };
@@ -44,7 +54,7 @@ async function startTask (flowId, inputData) {
   initQueue.add('init', stepTask, {removeOnComplete: true});
 }
 
-const inputData = {from: '2422', to: '2344', account: '2', };
+const inputData = {calldata: {from: '2422', to: '2344', account: '2', }};
 const flowId = 'test2';
 
 (async function () {

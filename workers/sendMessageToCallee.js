@@ -2,9 +2,11 @@
 const {StepWorker} = require('./../lib/stepWorker');
 
 class SendMessageToCallee extends StepWorker {
-  async do (stepTask) {
+  async do (stepTask, storeData) {
 
-    const to = await this.store.getData(stepTask.taskId, 'to');
+    console.log('storeData', storeData);
+
+    const to = storeData
     console.log('!!!!!!!! to ', to);
     const result = 'send mail success' + to;
     return {result};

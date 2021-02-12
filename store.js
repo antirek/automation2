@@ -1,11 +1,11 @@
-
 class Store {
   constructor ({client}) {
     this.client = client;
   }
-
+  
   async setData(stepId, key, object) {
-    await this.client.set(`${stepId}:${key}`, JSON.stringify(object), 'ex', 1200);
+    // console.log('redis set data', `${stepId}:${key}`, d);    
+    await this.client.set(`${stepId}:${key}`, JSON.stringify(object));
   }
 
   async getData(stepId, key) {

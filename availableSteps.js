@@ -2,8 +2,10 @@
 const availableSteps = [
   {
     stepName: 'modifyCalldataWorker',
-    inputType: 'callData',
-    outputType: 'simpleData',
+    vars: {
+      in: ['callData'],
+      out: ['simpleData'],
+    },
   },
   {
     stepName: 'detectWorktimeWorker',
