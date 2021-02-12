@@ -5,13 +5,12 @@
   </head>
   <body>
     <div id="app">
-
       <div class="row">
 
         <div class="col-12 col-md-3 q-pa-md">
           <q-list bordered separator v-for="(task,index) in tasks" v-if="tasks" :key="index">
             <q-item clickable>
-              <q-item-section @click="loadStepTaskLog(task.taskId)">
+              <q-item-section @click="loadDataByTaskId(task.taskId)">
                 <q-item-label>{{ task.taskId }}</q-item-label>
               </q-item-section>
             </q-item>
@@ -19,12 +18,40 @@
         </div>
 
         <div class="col-12 col-md-9 q-pa-md">
-          <q-table
-            title="Logs"
-            :data="data"
-            :columns="columns"
-            :pagination.sync="pagination"
-          />
+
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="logs" label="Logs"></q-tab>
+            <q-tab name="data"  label="Redis data"></q-tab>
+          </q-tabs>
+
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="logs">
+              <q-table
+                title="Logs"
+                :data="logs"
+                :columns="columns"
+                :pagination.sync="pagination"
+              ></q-table>
+            </q-tab-panel>
+
+            <q-tab-panel name="data">
+              <q-table
+                title="Redis Data"
+                :data="data"
+                :columns="columns2"
+                :pagination.sync="pagination"
+              ></q-table>
+            </q-tab-panel>
+          </q-tab-panels>
+          
         </div>
         
       </div>
@@ -40,12 +67,24 @@
         
         data: function () {
           return {
+            tab: 'logs',
             tasks: null,
             data: [],
+            logs: [],
             pagination: {
               page: 1,    
               rowsPerPage: 0 // 0 means all rows    
             },
+            columns2: [
+              {
+                label: 'key',
+                field: 'key',
+              },
+              {
+                label: 'data',
+                field: 'data',
+              },
+            ],
             columns: [
               {
                 label: 'time',
@@ -86,8 +125,15 @@
           async loadTasks() {
             this.tasks = (await axios.get('http://localhost:3001/tasks')).data;
           },
+          async loadDataByTaskId (taskId) {
+            await this.loadStepTaskLog(taskId);
+            await this.loadTaskData(taskId);
+          },
           async loadStepTaskLog(taskId) {
-            this.data = (await axios.get(`http://localhost:3001/steptaskLog/${taskId}`)).data;
+            this.logs = (await axios.get(`http://localhost:3001/steptaskLog/${taskId}`)).data;
+          },
+          async loadTaskData(taskId) {
+            this.data = (await axios.get(`http://localhost:3001/data/${taskId}`)).data;
           },
         },
         mounted () {
