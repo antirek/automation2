@@ -34,9 +34,9 @@ async function startTask (flowId, inputData) {
   const task = new Task({flowDefinition: JSON.stringify(flowDefinition)});
   await task.save();
 
-  const varsOut = flow.getStartStepVarsOut();
-  for (const varOut of varsOut) {
-    await store.setData(task.taskId, varOut, inputData[varOut]);
+  const varsIn = flow.getFirstStepVarsIn();
+  for (const varIn of varsIn) {
+    await store.setData(task.taskId, varIn, inputData[varIn]);
   }
 
   const firstStep = flow.getFirstStep();
@@ -46,7 +46,6 @@ async function startTask (flowId, inputData) {
     stepTaskId: nanoid(),
     step: firstStep,
     taskId: task.taskId,
-    // input: inputData,
     flowDefinition,
     stepperId: 0,
   };

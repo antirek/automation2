@@ -8,8 +8,6 @@ const {
   SendmailWorker,
   DelayWorker,
   DetectWorktimeWorker,
-  SendMessageToCaller,
-  SendMessageToCallee,
   PrepareMessagesWorker,
   SendMessageWorker,
 } = require('./workers');
@@ -25,7 +23,7 @@ const stepProcessors = [
     ],
   },*/
   {
-    queue: 'delay',
+    queue: 'delayWorker',
     workers: [
       new DelayWorker({store}),
     ],
@@ -46,18 +44,6 @@ const stepProcessors = [
     queue: 'detectWorktimeWorker',
     workers: [
       new DetectWorktimeWorker({store}),
-    ],
-  },
-  {
-    queue: 'sendMessageToCallerWorker',
-    workers: [
-      new SendMessageToCaller({store}),
-    ],
-  },
-  {
-    queue: 'sendMessageToCalleeWorker',
-    workers: [
-      new SendMessageToCallee({store}),
     ],
   },
   {

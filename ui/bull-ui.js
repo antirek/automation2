@@ -18,6 +18,7 @@ const queues = [
   'sendMessageToCalleeWorker',
   'prepareMessages',
   'sendMessageWorker',
+  'delayWorker',
 ];
 
 const bullQueues = queues.map(q => {return new Queue(q)});

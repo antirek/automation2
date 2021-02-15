@@ -9,8 +9,8 @@ module.exports = [
         type: 'start',
         next: 'modifyCalldata',
         vars: {
-          out: ['calldata'],            // для проверки использования входящих и исходящих параметров на steps
-        },
+          out: ['calldata'],
+        }
       },
       {
         id: 'modifyCalldata',
@@ -47,15 +47,16 @@ module.exports = [
         id: 'detectWorktime',
         worker: 'detectWorktimeWorker',
         params: {
-          worktime: {
-            startTime: '09:00',
-            endTime: '18:00',
-          }
+          startHour: '09',
+          endHour: '10',
         },
         nextVariants: {
           'worktime': 'sendMessageToCaller',
           'notworktime': 'delayToWorktime',
         },
+        vars: {
+          out: ['delayToWorktime'],
+        }
       },
       {
         id: 'sendMessageToCaller',
@@ -86,7 +87,12 @@ module.exports = [
       },
       {
         id: 'delayToWorktime',
-        worker: 'delayToWorktimeWorker',
+        vars: {
+          in: [
+            'delay:delayToWorktime',
+          ]
+        },
+        worker: 'delayWorker',
         next: 'sendMessageToCaller',
       },
     ],
