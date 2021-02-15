@@ -50,4 +50,6 @@ class DetectWorktimeWorker extends StepWorker {
   };
 }
 
+DetectWorktimeWorker.step = 'detectWorktime';
+
 module.exports = {DetectWorktimeWorker};

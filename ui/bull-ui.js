@@ -6,19 +6,28 @@ const IOredis = require('ioredis');
 
 // const connection = new IOredis(config.get('redis'));
 
+
+
+const {
+  ModifyCalldataWorker, 
+  SendmailWorker,
+  DelayWorker,
+  DetectWorktimeWorker,
+  PrepareMessagesWorker,
+  SendMessageWorker,
+} = require('./../workers');
+
+
 const app = express();
 const queues = [
   'init',
-  'delay',
-  'httprequestExecutor',
   'ready',
-  'modifyCalldataWorker',
-  'detectWorktimeWorker',
-  'sendMessageToCallerWorker',
-  'sendMessageToCalleeWorker',
-  'prepareMessages',
-  'sendMessageWorker',
-  'delayWorker',
+  ModifyCalldataWorker.getStep(),
+  SendmailWorker.getStep(),
+  DelayWorker.getStep(),
+  DetectWorktimeWorker.getStep(),
+  PrepareMessagesWorker.getStep(),
+  SendMessageWorker.getStep(),
 ];
 
 const bullQueues = queues.map(q => {return new Queue(q)});

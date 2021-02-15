@@ -7,4 +7,6 @@ class SendmailWorker extends StepWorker {
   }
 }
 
+SendmailWorker.step = 'sendmail';
+
 module.exports = {SendmailWorker};

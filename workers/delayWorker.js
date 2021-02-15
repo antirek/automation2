@@ -3,7 +3,6 @@ const {StepWorker} = require('./../lib/stepWorker');
 
 class DelayWorker extends StepWorker {
   delay;
-
   async do (stepTask, inputData) {
 
     const delay = inputData.delay;
@@ -18,5 +17,7 @@ class DelayWorker extends StepWorker {
     this.readyQueue.add('executor', stepTask, {delay: this.delay, removeOnComplete: true, });
   }
 }
+
+DelayWorker.step = 'delay';
 
 module.exports = {DelayWorker};

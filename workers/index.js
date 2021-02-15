@@ -7,4 +7,3 @@ module.exports = {
   PrepareMessagesWorker: require('./prepareMessages').PrepareMessagesWorker,
   SendMessageWorker: require('./sendMessage').SendMessageWorker,
 }
-

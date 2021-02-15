@@ -25,4 +25,6 @@ class PrepareMessagesWorker extends StepWorker {
   }
 }
 
+PrepareMessagesWorker.step = 'prepareMessages';
+
 module.exports = {PrepareMessagesWorker};

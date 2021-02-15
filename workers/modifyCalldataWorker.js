@@ -20,4 +20,6 @@ class ModifyCalldataWorker extends StepWorker {
   }
 }
 
+ModifyCalldataWorker.step = 'modifyCalldata';
+
 module.exports = {ModifyCalldataWorker};

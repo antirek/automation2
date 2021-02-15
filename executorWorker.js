@@ -16,44 +16,38 @@ const client = new Redis();
 const store = new Store({client})
 
 const stepProcessors = [
-  /*{
-    queue: 'httprequestExecutor',
-    workers: [
-      stepWorker1,
-    ],
-  },*/
   {
-    queue: 'delayWorker',
+    queue: DelayWorker.getStep(),
     workers: [
       new DelayWorker({store}),
     ],
   },
   {
-    queue: 'sendmail',
+    queue: SendmailWorker.getStep(),
     workers: [
       new SendmailWorker({store}),
     ],
   },
   {
-    queue: 'modifyCalldataWorker',
+    queue: ModifyCalldataWorker.getStep(),
     workers: [
       new ModifyCalldataWorker({store}),
     ],
   },
   {
-    queue: 'detectWorktimeWorker',
+    queue: DetectWorktimeWorker.getStep(),
     workers: [
       new DetectWorktimeWorker({store}),
     ],
   },
   {
-    queue: 'prepareMessages',
+    queue: PrepareMessagesWorker.getStep(),
     workers: [
       new PrepareMessagesWorker({store}),
     ],
   },
   {
-    queue: 'sendMessageWorker',
+    queue: SendMessageWorker.getStep(),
     workers: [
       new SendMessageWorker({store}),
     ],
@@ -61,8 +55,9 @@ const stepProcessors = [
 ];
 
 stepProcessors.map(processor => {
+//  console.log('step', processor.queue);
   processor.workers.map(worker => {
-    new Worker(processor.queue, async (job) => {
+    new Worker(processor.queue, async (job) => {      
       await worker.process(job);
     });
   });

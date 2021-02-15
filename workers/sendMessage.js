@@ -2,7 +2,6 @@
 const {StepWorker} = require('./../lib/stepWorker');
 
 class SendMessageWorker extends StepWorker {
-
   varsInSchema = [
     {
       name: 'to',
@@ -36,5 +35,7 @@ class SendMessageWorker extends StepWorker {
     return {result};
   }
 }
+
+SendMessageWorker.step = 'sendMessage';
 
 module.exports = {SendMessageWorker};
