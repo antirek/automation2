@@ -11,6 +11,7 @@ const {
   SendMessageToCaller,
   SendMessageToCallee,
   PrepareMessagesWorker,
+  SendMessageWorker,
 } = require('./workers');
 
 const client = new Redis();
@@ -63,6 +64,12 @@ const stepProcessors = [
     queue: 'prepareMessages',
     workers: [
       new PrepareMessagesWorker({store}),
+    ],
+  },
+  {
+    queue: 'sendMessageWorker',
+    workers: [
+      new SendMessageWorker({store}),
     ],
   },
 ];

@@ -10,13 +10,14 @@ const app = express();
 const queues = [
   'init',
   'delay',
-  'httprequestExecutor', 
+  'httprequestExecutor',
   'ready',
   'modifyCalldataWorker',
   'detectWorktimeWorker',
   'sendMessageToCallerWorker',
   'sendMessageToCalleeWorker',
   'prepareMessages',
+  'sendMessageWorker',
 ];
 
 const bullQueues = queues.map(q => {return new Queue(q)});

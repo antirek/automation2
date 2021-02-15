@@ -11,10 +11,15 @@ class PrepareMessagesWorker extends StepWorker {
     const callerNumber = '121212121212';
     const calleeNumber = '133333333333';
 
+    const callerMessage = 'caller message';
+    const calleeMessage = 'callee message';
+
     return {
       result: {
         callerNumber,
         calleeNumber,
+        callerMessage,
+        calleeMessage,
       },
     };
   }

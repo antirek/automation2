@@ -59,22 +59,28 @@ module.exports = [
       },
       {
         id: 'sendMessageToCaller',
-        worker: 'sendMessageToCallerWorker',
+        worker: 'sendMessageWorker',
         next: 'sendMessageToCallee',
         vars: {
           in: [
-            'callerNumber',
-            'callerMessage',
+            'to:callerNumber',
+            'message:callerMessage',
+          ],
+          out: [
+            'status:callerStatus',
           ],
         },
       },
       {
         id: 'sendMessageToCallee',
-        worker: 'sendMessageToCalleeWorker',
+        worker: 'sendMessageWorker',
         vars: {
           in: [
-            'calleeNumber',
-            'calleeMessage',
+            'to:calleeNumber',
+            'message:calleeMessage',
+          ],
+          out: [
+            'status:calleeStatus',
           ],
         },
       },

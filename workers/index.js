@@ -7,5 +7,6 @@ module.exports = {
   SendMessageToCaller: require('./sendMessageToCaller').SendMessageToCaller,
   SendMessageToCallee: require('./sendMessageToCallee').SendMessageToCallee,
   PrepareMessagesWorker: require('./prepareMessages').PrepareMessagesWorker,
+  SendMessageWorker: require('./sendMessage').SendMessageWorker,
 }
 
