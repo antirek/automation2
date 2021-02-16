@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {nanoid} = require('nanoid');
 
 const createModels = (dbConn) => {
-  const FlowSchema = new mongoose.Schema({
+  const FlowDefinitionSchema = new mongoose.Schema({
     flowId: String,
     steps: [],
   });
@@ -13,11 +13,12 @@ const createModels = (dbConn) => {
       default: () => nanoid(),
       required: true,
     },
-    flowDefinition: String,
+    flowDefinition: mongoose.Schema.Types.Mixed,
+    initData: mongoose.Schema.Types.Mixed,
   });
 
   const Task = dbConn.model('Task', TaskSchema);
-  const Flow = dbConn.model('Flow', FlowSchema);
+  const FlowDefinition = dbConn.model('FlowDefinition', FlowDefinitionSchema);
 
   const StepTaskLogSchema = new mongoose.Schema({
     taskId: {
@@ -58,10 +59,22 @@ const createModels = (dbConn) => {
 
   const StepTaskLog = dbConn.model('StepTaskLog', StepTaskLogSchema);
 
+  const WebhookSchema = new mongoose.Schema({
+    webhookId: {
+      type: String,
+      default: () => nanoid(),
+      required: true,
+    },
+    flowId: String,
+  });
+
+  const Webhook = dbConn.model('Webhook', WebhookSchema);
+
   return {
     Task,
-    Flow,
+    FlowDefinition,
     StepTaskLog,
+    Webhook,
   };
 };
 
