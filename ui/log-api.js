@@ -10,6 +10,12 @@ const app = express();
 const client = new Redis();
 // const store = new Store({client});
 
+
+const flowDefinition = require('./../flowDefinitions')[0];
+const { Flow } = require('../lib/flow');
+const flow = new Flow(flowDefinition);
+
+
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -21,6 +27,10 @@ const {Task, StepTaskLog} = createModels(dbConn);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
+});
+
+app.get('/flow', (req, res) => {
+  res.sendFile(path.join(__dirname, './flow.html'));
 });
 
 app.get('/tasks', async (req, res) => {
@@ -43,6 +53,12 @@ app.get('/data/:taskId', async (req, res) => {
   }
   console.log('data', d);
   res.json(d);
+});
+
+app.get('/flow/data', async (req,res) => {
+  const nodes = flow.getNodes();
+  const edges = flow.getEdges();
+  res.json({nodes, edges});
 });
 
 app.listen(3001, () => {

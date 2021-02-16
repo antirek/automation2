@@ -6,7 +6,7 @@ module.exports = [
     },
     steps: [
       {
-        type: 'start',
+        id: 'start',
         next: 'modifyCalldata',
         vars: {
           out: ['calldata'],
