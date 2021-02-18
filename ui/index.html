@@ -7,7 +7,19 @@
     <div id="app">
       <div class="row">
 
-        <div class="col-12 col-md-3 q-pa-md">
+        <div class="col-12 col-md-2 q-pa-md">
+          <h5>Webhooks</h5>
+          <q-list bordered separator v-for="(webhook,index) in webhooks" v-if="webhooks" :key="index">
+            <q-item clickable>
+              <q-item-section @click="loadTasks(webhook.webhookId)">
+                <q-item-label>{{ webhook.webhookId }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+
+        <div class="col-12 col-md-2 q-pa-md">
+          <h5>Tasks</h5>
           <q-list bordered separator v-for="(task,index) in tasks" v-if="tasks" :key="index">
             <q-item clickable>
               <q-item-section @click="loadDataByTaskId(task.taskId)">
@@ -17,8 +29,8 @@
           </q-list>
         </div>
 
-        <div class="col-12 col-md-9 q-pa-md">
-
+        <div class="col-12 col-md-8 q-pa-md">
+          <h5>Task</h5>
           <q-tabs
             v-model="tab"
             dense
@@ -28,11 +40,16 @@
             align="justify"
             narrow-indicator
           >
+            <q-tab name="info" label="Info"></q-tab>
             <q-tab name="logs" label="Logs"></q-tab>
             <q-tab name="data"  label="Redis data"></q-tab>
           </q-tabs>
 
           <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="info">
+              <h3>Info</h3>
+            </q-tab-panel>
+
             <q-tab-panel name="logs">
               <q-table
                 title="Logs"
@@ -66,13 +83,14 @@
         el: '#app',        
         data: function () {
           return {
-            tab: 'logs',
+            tab: 'info',
             tasks: null,
+            webhooks: null,
             data: [],
             logs: [],
             pagination: {
-              page: 1,    
-              rowsPerPage: 0 // 0 means all rows    
+              page: 1,
+              rowsPerPage: 0 // 0 means all rows
             },
             columns2: [
               {
@@ -121,8 +139,11 @@
           }
         },
         methods: {
-          async loadTasks() {
-            this.tasks = (await axios.get('http://localhost:3001/tasks')).data;
+          async loadTasks(webhookId) {
+            this.tasks = (await axios.get(`http://localhost:3001/task/${webhookId}`)).data;
+          },
+          async loadWebhooks() {
+            this.webhooks = (await axios.get('http://localhost:3001/webhooks')).data;
           },
           async loadDataByTaskId (taskId) {
             await this.loadStepTaskLog(taskId);
@@ -136,7 +157,8 @@
           },
         },
         mounted () {
-          this.loadTasks();
+          this.loadWebhooks();
+          //this.loadTasks();
         },
       });
 

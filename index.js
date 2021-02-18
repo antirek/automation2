@@ -3,6 +3,7 @@ const config = require('config');
 const { Queue } = require('bullmq');
 const { nanoid } = require('nanoid');
 const Redis = require('ioredis');
+const axios = require('axios').default;
 
 const {Store} = require('./store');
 const flowDefinitions = require('./flowDefinitions');
@@ -56,6 +57,16 @@ async function startTask (flowId, inputData) {
 const inputData = {calldata: {from: '2422', to: '2344', account: '2', }};
 const flowId = 'test2';
 
+ 
 (async function () {
-  await startTask(flowId, inputData)
+//  await startTask(flowId, inputData)
+
+  const resp = await axios.post('http://localhost:3003/webhook/hook', inputData);
+  console.log('response', resp);
+
 })();
+
+
+
+
+

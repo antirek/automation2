@@ -23,7 +23,7 @@ const dbConn = mongoose.createConnection(config.mongodb, {
   useFindAndModify: false,
 });
 
-const {Task, StepTaskLog} = createModels(dbConn);
+const {Task, StepTaskLog, Webhook, } = createModels(dbConn);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
@@ -33,9 +33,19 @@ app.get('/flow', (req, res) => {
   res.sendFile(path.join(__dirname, './flow.html'));
 });
 
+app.get('/webhooks', async (req, res) => {
+  res.json(await Webhook.find());
+});
+
 app.get('/tasks', async (req, res) => {
   return res.json(await Task.find());
 });
+
+app.get('/task/:webhookId', async (req, res) => {
+  const {webhookId} = req.params;
+  return res.json(await Task.find({webhookId}));
+});
+
 
 app.get('/steptasklog/:taskId', async (req, res) => {
   const {taskId} = req.params;

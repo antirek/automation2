@@ -13,8 +13,14 @@ const createModels = (dbConn) => {
       default: () => nanoid(),
       required: true,
     },
+    webhookId: String,
     flowDefinition: mongoose.Schema.Types.Mixed,
     initData: mongoose.Schema.Types.Mixed,
+    status: {
+      type: String,
+      default: 'active',
+    },
+    createdTime: String,
   });
 
   const Task = dbConn.model('Task', TaskSchema);

@@ -10,6 +10,7 @@
     "start-step-executor-worker": "node executorWorker",
     "start-bull-ui": "node ui/bull-ui",
     "start-log-ui": "node ui/log-api",
+    "start-webhook-api": "node webhooks",
     "start-trigger": "node index"
   },
   "repository": {
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/antirek/automation2#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "bull-board": "^1.2.0",
     "bullmq": "^1.14.3",
     "config": "^3.3.3",

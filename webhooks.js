@@ -4,6 +4,7 @@ const { Queue } = require('bullmq');
 const { nanoid } = require('nanoid');
 const Redis = require('ioredis');
 const express = require('express');
+const dayjs = require('dayjs');
 
 const {Store} = require('./store');
 const flowDefinitions = require('./flowDefinitions');
@@ -24,13 +25,18 @@ const {Task, Webhook, } = createModels(dbConn);
 const app = express();
 app.use(express.json({limit: '2mb'}));
 
-app.post('/webhook/:webhookId', async (req,res) => {
+app.post('/webhook/:webhookId', async (req, res) => {
   console.log('hello world');
   const {webhookId} = req.params;
   const inputData = req.body;
-  const webhook = Webhook.findOne({webhookId})
+  const webhook = await Webhook.findOne({webhookId});
+  if (!webhook) {
+    console.log('no webhook', webhookId);
+    return res.json({});
+  }
   const flowId = webhook.flowId;
-  await startTask(flowId, inputData);
+  await startTask(flowId, webhookId, inputData);
+  res.json({status:"OK"});
 });
 
 const getFlowDefinition = (id) => {
@@ -39,13 +45,15 @@ const getFlowDefinition = (id) => {
 
 const initQueue = new Queue('init');
 
-async function startTask (flowId, inputData) {
+async function startTask (flowId, webhookId, inputData) {
   const flowDefinition = getFlowDefinition(flowId);
   const flow = new Flow(flowDefinition);
 
   const task = new Task({
     flowDefinition: JSON.stringify(flowDefinition),
+    webhookId,
     initData: inputData,
+    createdTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
   });
   await task.save();
 
