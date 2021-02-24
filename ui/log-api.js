@@ -11,7 +11,6 @@ const app = express();
 const client = new Redis(config.redis);
 // const store = new Store({client});
 
-
 const flowDefinition = require('./../flowDefinitions')[0];
 const { Flow } = require('../lib/flow');
 const flow = new Flow(flowDefinition);
