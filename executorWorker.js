@@ -61,6 +61,6 @@ stepProcessors.map(processor => {
   processor.workers.map(worker => {
     new Worker(processor.queue, async (job) => {      
       await worker.process(job);
-    });
+    }, {connection});
   });
 });
