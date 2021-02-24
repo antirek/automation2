@@ -3,6 +3,7 @@ const config = require('config');
 const mongoose = require('mongoose');
 const path = require('path');
 const Redis = require('ioredis');
+const fs = require('fs');
 
 const { createModels } = require('./../models/models');
 const app = express();
@@ -25,7 +26,9 @@ const dbConn = mongoose.createConnection(config.mongodb, {
 const {Task, StepTaskLog, Webhook, } = createModels(dbConn);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './index.html'));
+  const file = fs.readFileSync(path.join(__dirname, './index.html'), 'utf8');
+  const content = file.replace('{{baseUrl}}', config.baseUrl);
+  res.send(content);
 });
 
 app.get('/flow', (req, res) => {

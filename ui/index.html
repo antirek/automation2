@@ -78,7 +78,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@1.15.0/dist/quasar.umd.min.js"></script>
     <script>
-
+      var baseUrl = '{{baseUrl}}';
       var app = new Vue({
         el: '#app',        
         data: function () {
@@ -140,20 +140,20 @@
         },
         methods: {
           async loadTasks(webhookId) {
-            this.tasks = (await axios.get(`http://localhost:3001/task/${webhookId}`)).data;
+            this.tasks = (await axios.get(`${baseUrl}/task/${webhookId}`)).data;
           },
           async loadWebhooks() {
-            this.webhooks = (await axios.get('http://localhost:3001/webhooks')).data;
+            this.webhooks = (await axios.get(`${baseUrl}/webhooks`)).data;
           },
           async loadDataByTaskId (taskId) {
             await this.loadStepTaskLog(taskId);
             await this.loadTaskData(taskId);
           },
           async loadStepTaskLog(taskId) {
-            this.logs = (await axios.get(`http://localhost:3001/steptaskLog/${taskId}`)).data;
+            this.logs = (await axios.get(`${baseUrl}/steptaskLog/${taskId}`)).data;
           },
           async loadTaskData(taskId) {
-            this.data = (await axios.get(`http://localhost:3001/data/${taskId}`)).data;
+            this.data = (await axios.get(`${baseUrl}/data/${taskId}`)).data;
           },
         },
         mounted () {
