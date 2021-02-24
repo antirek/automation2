@@ -4,8 +4,8 @@ class Store {
   }
   
   async setData(stepId, key, object) {
-    // console.log('redis set data', `${stepId}:${key}`, d);    
-    await this.client.set(`${stepId}:${key}`, JSON.stringify(object));
+    // console.log('redis set data', `${stepId}:${key}`, d);
+    await this.client.set(`${stepId}:${key}`, JSON.stringify(object), 'ex', 60*60*24*3);
   }
 
   async getData(stepId, key) {

@@ -2,6 +2,8 @@ const {Worker} = require('bullmq');
 const Redis = require('ioredis');
 
 const {Store} = require('./store');
+const config = require('config');
+
 
 const {
   ModifyCalldataWorker, 
@@ -12,44 +14,44 @@ const {
   SendMessageWorker,
 } = require('./workers');
 
-const client = new Redis();
-const store = new Store({client})
+const connection = new Redis(config.redis);
+const store = new Store({client: connection});
 
 const stepProcessors = [
   {
     queue: DelayWorker.getStep(),
     workers: [
-      new DelayWorker({store}),
+      new DelayWorker({store, connection}),
     ],
   },
   {
     queue: SendmailWorker.getStep(),
     workers: [
-      new SendmailWorker({store}),
+      new SendmailWorker({store, connection}),
     ],
   },
   {
     queue: ModifyCalldataWorker.getStep(),
     workers: [
-      new ModifyCalldataWorker({store}),
+      new ModifyCalldataWorker({store, connection}),
     ],
   },
   {
     queue: DetectWorktimeWorker.getStep(),
     workers: [
-      new DetectWorktimeWorker({store}),
+      new DetectWorktimeWorker({store, connection}),
     ],
   },
   {
     queue: PrepareMessagesWorker.getStep(),
     workers: [
-      new PrepareMessagesWorker({store}),
+      new PrepareMessagesWorker({store, connection}),
     ],
   },
   {
     queue: SendMessageWorker.getStep(),
     workers: [
-      new SendMessageWorker({store}),
+      new SendMessageWorker({store, connection}),
     ],
   },
 ];
