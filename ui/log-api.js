@@ -7,14 +7,13 @@ const Redis = require('ioredis');
 const { createModels } = require('./../models/models');
 const app = express();
 
-const client = new Redis();
+const client = new Redis(config.redis);
 // const store = new Store({client});
 
 
 const flowDefinition = require('./../flowDefinitions')[0];
 const { Flow } = require('../lib/flow');
 const flow = new Flow(flowDefinition);
-
 
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,

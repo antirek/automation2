@@ -11,8 +11,8 @@ const flowDefinitions = require('./flowDefinitions');
 const { Flow } = require('./lib/flow');
 const { createModels } = require('./models/models');
 
-const client = new Redis();
-const store = new Store({client});
+const connection = new Redis(config.redis);
+const store = new Store({client: connection});
 
 const dbConn = mongoose.createConnection(config.mongodb, {
   useNewUrlParser: true,
@@ -43,7 +43,7 @@ const getFlowDefinition = (id) => {
   return flowDefinitions.find(flow => flow.id === id);
 }
 
-const initQueue = new Queue('init');
+const initQueue = new Queue('init', {connection});
 
 async function startTask (flowId, webhookId, inputData) {
   const flowDefinition = getFlowDefinition(flowId);
